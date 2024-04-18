@@ -10,11 +10,12 @@
 </h3>
 
 ## Features
-  - Disable the new UI
+  - Disable the new UI of Watch page
   - Automatic resizing of the primary container (Video and Below the Video)
   - Automatic resizing of the video
   - Automatic resizing of the controls buttons
   - Automatic resize all of secondary container (Recommandation)
+  - Keep settings for other pages
 
 ## Preview
 <h3> ❌ BEFORE ❌ </h3>
