@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Return Youtube Layout
 // @namespace    http://github.com/rztprog
-// @version      0.4
+// @version      0.5
 // @description  Disable the experimental Youtube 'Porn Layout' features for a more comfortable viewing experience.
 // @author       Rztprog
 // @match        https://www.youtube.com/*
@@ -40,15 +40,15 @@
 
     // EventListeners
     document.addEventListener('click', (event) => {
-        resizeYoutubeWatch();
+        resizeYoutubePlayer();
         modifySidebarVideos();
     }, true);
 
     // Functions
-    function resizeYoutubeWatch() {
+    function resizeYoutubePlayer() {
         let counter = 0;
 
-        const findYoutubeWatch = () => {
+        const findYoutubePlayer = () => {
             counter++;
             if (window.location.href.includes('youtube.com/watch')) {
                 clearInterval(timer2);
@@ -57,22 +57,35 @@
                 const mainVideo = document.querySelector('.html5-main-video');
                 const playerContainerOuter = document.querySelector('#player-container-outer');
                 const ytpChromeBottom = document.querySelector('.ytp-chrome-bottom');
-
-                setElementSize(primary, 'max-width', 'fit-content', false);
-                setElementSize(playerContainerOuter, 'max-width', 100, '%');
+                const ytpHeatMapChapter = document.querySelector('.ytp-heat-map-chapter');
+                const ytpChapterHoverContainer = document.querySelector('.ytp-chapter-hover-container');
+                const ytpIvVideoContent = document.querySelector('.ytp-iv-video-content');
 
                 if (!observersActive) {
-                    observers.push(observerAndSetSize(primary, 'max-width', 'fit-content', false, false, false));
-                    observers.push(observerAndSetSize(playerContainerOuter, 'max-width', 100, '%', false, false));
+                    modifySidebarVideos();
+                    observers.push(observerAndSetSize(primary, 'max-width', 'calc((100vh - 56px - 24px - 136px )*( 16 / 9 ))', '', false, false));
+                    observers.push(observerAndSetSize(primary, 'min-width', 'calc( 480px *( 16 / 9 ))', '', false, false));
+                    observers.push(observerAndSetSize(playerContainerOuter, 'max-width', 'calc((100vh - 56px - 24px - 136px )*( 16 / 9 ))', '', false, false));
+                    observers.push(observerAndSetSize(playerContainerOuter, 'min-width', 'calc( 480px *( 16 / 9 ))', '', false, false));
                     observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', mainVideo, "width"));
                     observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', mainVideo, "height"));
-                    observers.push(observerAndSetSize(moviePlayer, '', 15, 'px', ytpChromeBottom, "width"));
-
+                    observers.push(observerAndSetSize(moviePlayer, '', 24, 'px', ytpChromeBottom, "width"));
                     observers.push(observerAndSetSize(mainVideo, "left", 0, "px"));
+
+                    /*
+                    if (waitForElements('#movie_player') && waitForElements('.ytp-heat-map-chapter') && waitForElements('.ytp-chapter-hover-container') && waitForElements('.ytp-iv-video-content')) {
+                        observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', ytpHeatMapChapter, "width"));
+                        observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', ytpChapterHoverContainer, "width"));
+                        observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', ytpIvVideoContent, "width"));
+                        observers.push(observerAndSetSize(moviePlayer, '', 0, 'px', ytpIvVideoContent, "height"));
+                    }
+                    */
+
                     observersActive = true;
                 }
             } else if (counter > 50) {
                 clearInterval(timer2);
+                modifySidebarVideos();
                 observers.forEach(observer => {
                     if (observer) {
                         observer.disconnect();
@@ -83,10 +96,12 @@
             }
         }
 
-        const timer2 = setInterval(findYoutubeWatch, 100);
+        const timer2 = setInterval(findYoutubePlayer, 100);
     }
 
     function observerAndSetSize(element, style, value, unit, elementToChange, elementToChangeStyle) {
+        setElementSize(element, style, value, unit);
+
         let observer = new MutationObserver(function(mutationsList, observer) {
             if (elementToChange) {
                 const newValue = elementToChangeStyle == "width" ? element.offsetWidth : element.offsetHeight;
@@ -99,22 +114,20 @@
         observer.observe(element, { attributes: true });
     }
 
-    function waitForElement(selector, style, value, unit, elementToChange, elementToChangeStyle) {
-        const elementIsDisplayed = () => {
+    /*
+    function waitForElements(selector) {
+        const elementDisplayed = () => {
             const element = document.querySelector(selector);
 
-            if (element !== null) {
+            if (element) {
                 clearInterval(timer2);
-                setElementSize(element, style, value, unit);
-
-                if (!observersActive) {
-                    observers.push(observerAndSetSize(element, style, value, unit, false, false));
-                }
+                return true;
             }
         }
 
-        const timer2 = setInterval(elementIsDisplayed, 50);
+        const timer2 = setInterval(elementDisplayed, 50);
     }
+    */
 
     function setElementSize(element, style, value, unit) {
         const newStyle = `${value}${unit ? unit : ""}`;
@@ -122,6 +135,9 @@
         switch (style) {
             case 'max-width':
                 element.style.maxWidth = newStyle;
+                break;
+            case 'min-width':
+                element.style.minWidth = newStyle;
                 break;
             case 'width':
                 element.style.width = newStyle;
@@ -229,6 +245,6 @@
         }
     }
 
-    const observer = new MutationObserver(modifySidebarVideos);
-    observers.push(observer.observe(document.body, { childList: true, subtree: true }));
+    const observer1 = new MutationObserver(modifySidebarVideos);
+    observers.push(observer1.observe(document.body, { childList: true, subtree: true }));
 })();
