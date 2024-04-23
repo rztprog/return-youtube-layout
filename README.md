@@ -28,5 +28,7 @@
 
 Copy and paste this ![script](https://github.com/rztprog/return-youtube-layout/blob/main/return-youtube-layout.js) in userscript manager (TamperMonkey / ViolentMonkey etc..)
 
+[![Watch the video](https://img.youtube.com/vi/sqj48A4AXy0/default.jpg)](https://www.youtube.com/watch?v=sqj48A4AXy0)
+
 ## Thanks to
 - ![Garbhj](https://github.com/garbhj) for his script (https://github.com/garbhj/revert-youtube-layout-UI-change)
