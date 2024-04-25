@@ -3,6 +3,7 @@
     <img src='https://github.com/rztprog/return-youtube-layout/assets/45171753/5a126c82-b8e1-41f8-9eab-d071af92f567'>
   </sub>
   <h1>Return Youtube Layout</h1>
+  Edit 24/04/2024 : It seems that since April 24th, the old layout has returned for everyone so this script is no longer required.
 </div>
 
 <h3 align="center">
